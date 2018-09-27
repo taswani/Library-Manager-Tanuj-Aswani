@@ -1,0 +1,36 @@
+extends layout
+
+block content
+    h1 Patron: Return Book
+    if(errors)
+      h2.error An error occurred!
+      ul.error
+        each error in errors
+          li=error.message
+
+    p
+      strong Book Title:
+      |
+      |
+      | #{loan.Book.title}
+    p
+      strong Loaned By:
+      |
+      |
+      | #{loan.Patron.first_name} #{loan.Patron.last_name}
+    p
+      strong Loaned On:
+      |
+      |
+      | #{moment(loan.loaned_on).utc().format('YYYY-MM-DD')}
+    p
+      strong Return By:
+      |
+      |
+      | #{moment(loan.return_by).utc().format('YYYY-MM-DD')}
+    form(action=`/return/${loan.id}/?_method=PUT`, method='post')
+      p
+        label(for='returned_on') Returned on:
+        input#returned_on(type='text', name='returned_on', value=moment().utc().add().format('YYYY-MM-DD'))
+      p
+        input(type='submit', value='Return Book')

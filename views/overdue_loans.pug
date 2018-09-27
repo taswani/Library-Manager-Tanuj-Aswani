@@ -1,0 +1,38 @@
+extends layout
+
+block content
+    h1 Overdue Loans
+    p
+      a.button(href='new_loan.html') Create New Loan
+    p
+      | Filters:
+      |
+      a(href='/all_loans') All
+      |,
+      |
+      a(href='/overdue_loans') Overdue
+      |,
+      |
+      a(href='/checked_loans') Checked Out
+    table
+      thead
+        tr
+          th Book
+          th Patron
+          th Loaned on
+          th Return by
+          th Returned on
+          th Action
+      tbody
+        each loan in loans
+          tr
+            td
+              a(href=`/books/${loan.book_id}`) #{loan.Book.title}
+            td
+              a(href=`/patrons/${loan.patron_id}`) #{loan.Patron.first_name} #{loan.Patron.last_name}
+            td #{moment(loan.loaned_on).utc().format('YYYY-MM-DD')}
+            td #{moment(loan.return_by).utc().format('YYYY-MM-DD')}
+            td #{loan.returned_on ? moment(loan.returned_on).utc().format('YYYY-MM-DD') : null}
+            td
+              if !loan.returned_on
+                a(href=`/return/${loan.id}`) Return Book
